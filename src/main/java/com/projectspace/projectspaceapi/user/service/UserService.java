@@ -20,12 +20,23 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
     }
 
+    public User readUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(EntityNotFoundException::new);
+    }
+
     public void createUser(CreateUserRequest createUserRequest) {
-        User user = new User();
         Optional<User> byEmail = userRepository.findByEmail(createUserRequest.getEmail());
         if (byEmail.isPresent()) {
             throw new RuntimeException("Email already taken!");
         }
+
+        Optional<User> byUsername = userRepository.findByUsername(createUserRequest.getUsername());
+        if (byUsername.isPresent()) {
+            throw new RuntimeException("Username already taken!");
+        }
+
+        User user = new User();
+
         user.setUsername(createUserRequest.getUsername());
         user.setEmail(createUserRequest.getEmail());
         user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
