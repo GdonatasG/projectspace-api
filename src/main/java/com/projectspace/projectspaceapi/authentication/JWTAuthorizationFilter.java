@@ -2,17 +2,21 @@ package com.projectspace.projectspaceapi.authentication;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
@@ -36,13 +40,22 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(AuthenticationConfigConstants.HEADER_STRING);
         if (token != null) {
-            String user = JWT.require(Algorithm.HMAC512(AuthenticationConfigConstants.SECRET.getBytes())).build().verify(token.replace(AuthenticationConfigConstants.TOKEN_PREFIX, "")).getSubject();
+            DecodedJWT verify = JWT.require(Algorithm.HMAC512(AuthenticationConfigConstants.SECRET.getBytes()))
+                    .build()
+                    .verify(token.replace(AuthenticationConfigConstants.TOKEN_PREFIX, ""));
 
-            if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+            String username = verify.getSubject();
+            String role = verify.getClaim("role").asString();
+
+            if (username != null) {
+                return new UsernamePasswordAuthenticationToken(username, null, getAuthorities(role));
             }
             return null;
         }
         return null;
+    }
+
+    private Collection<? extends GrantedAuthority> getAuthorities(String role) {
+        return List.of(new SimpleGrantedAuthority(role));
     }
 }

@@ -1,13 +1,11 @@
 package com.projectspace.projectspaceapi.user.service;
 
 import com.projectspace.projectspaceapi.common.exception.AlreadyTakenException;
-import com.projectspace.projectspaceapi.common.exception.UserNotFoundException;
 import com.projectspace.projectspaceapi.user.model.User;
 import com.projectspace.projectspaceapi.user.repository.UserRepository;
 import com.projectspace.projectspaceapi.user.request.CreateUserRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +41,7 @@ public class UserService {
         user.setUsername(createUserRequest.getUsername());
         user.setEmail(createUserRequest.getEmail());
         user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
+        user.setRole(createUserRequest.getRole());
         userRepository.save(user);
     }
 }

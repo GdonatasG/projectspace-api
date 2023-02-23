@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.projectspace.projectspaceapi.common.exception.UserNotFoundException;
 import com.projectspace.projectspaceapi.common.response.Error;
 import com.projectspace.projectspaceapi.common.response.ErrorBody;
 import com.projectspace.projectspaceapi.user.model.User;
@@ -13,12 +12,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
@@ -26,7 +23,6 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 @RequiredArgsConstructor
 public class JWTAuthenticationFiler extends UsernamePasswordAuthenticationFilter {
@@ -67,6 +63,7 @@ public class JWTAuthenticationFiler extends UsernamePasswordAuthenticationFilter
         String token = JWT
                 .create()
                 .withSubject(((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername())
+                .withClaim("role", auth.getAuthorities().iterator().next().getAuthority())
                 .withExpiresAt(new Date(System.currentTimeMillis() + AuthenticationConfigConstants.EXPIRATION_TIME_IN_MS))
                 .sign(Algorithm.HMAC512(AuthenticationConfigConstants.SECRET.getBytes()));
 
