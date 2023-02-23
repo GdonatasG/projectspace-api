@@ -69,6 +69,17 @@ public class JWTAuthenticationFiler extends UsernamePasswordAuthenticationFilter
                 .withSubject(((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + AuthenticationConfigConstants.EXPIRATION_TIME_IN_MS))
                 .sign(Algorithm.HMAC512(AuthenticationConfigConstants.SECRET.getBytes()));
-        response.addHeader(AuthenticationConfigConstants.HEADER_STRING, token);
+
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put("token", token);
+        String json = node.toPrettyString();
+
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        out.print(json);
+        out.flush();
     }
 }
