@@ -1,10 +1,13 @@
 package com.projectspace.projectspaceapi.user.service;
 
+import com.projectspace.projectspaceapi.common.exception.AlreadyTakenException;
+import com.projectspace.projectspaceapi.common.exception.UserNotFoundException;
 import com.projectspace.projectspaceapi.user.model.User;
 import com.projectspace.projectspaceapi.user.repository.UserRepository;
 import com.projectspace.projectspaceapi.user.request.CreateUserRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +30,12 @@ public class UserService {
     public void createUser(CreateUserRequest createUserRequest) {
         Optional<User> byEmail = userRepository.findByEmail(createUserRequest.getEmail());
         if (byEmail.isPresent()) {
-            throw new RuntimeException("Email already taken!");
+            throw new AlreadyTakenException("Email already taken!");
         }
 
         Optional<User> byUsername = userRepository.findByUsername(createUserRequest.getUsername());
         if (byUsername.isPresent()) {
-            throw new RuntimeException("Username already taken!");
+            throw new AlreadyTakenException("Username already taken!");
         }
 
         User user = new User();
