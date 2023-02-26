@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConstants;
+import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
 import com.projectspace.projectspaceapi.common.response.SuccessBody;
 import com.projectspace.projectspaceapi.user.model.User;
 import com.projectspace.projectspaceapi.user.model.VisualUser;
@@ -38,19 +39,17 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<VisualUser> getCurrentUser() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String token = request.getHeader("Authorization").split(" ")[1];
-
-        DecodedJWT verify = JWT.require(Algorithm.HMAC512(AuthenticationConfigConstants.SECRET.getBytes()))
-                .build()
-                .verify(token.replace(AuthenticationConfigConstants.TOKEN_PREFIX, ""));
-
-        User user = userService.readUserByUsername(verify.getSubject());
+        User user = AuthenticationUserHelper.getCurrentUser(userService);
 
         VisualUser visualUser = new VisualUser();
         visualUser.setUsername(user.getUsername());
+        visualUser.setFirstName(user.getFirstName());
+        visualUser.setLastName(user.getLastName());
         visualUser.setEmail(user.getEmail());
+        visualUser.setOrganizationName(user.getOrganizationName());
         visualUser.setRole(user.getRole());
+        visualUser.setCreatedAt(user.getCreatedAt());
+        visualUser.setUpdatedAt(user.getUpdatedAt());
 
         return new ResponseEntity<>(visualUser, HttpStatus.OK);
     }
