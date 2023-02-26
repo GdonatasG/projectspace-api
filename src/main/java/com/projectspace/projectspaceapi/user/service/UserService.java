@@ -1,9 +1,12 @@
 package com.projectspace.projectspaceapi.user.service;
 
 import com.projectspace.projectspaceapi.common.exception.AlreadyTakenException;
+import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
 import com.projectspace.projectspaceapi.user.model.User;
 import com.projectspace.projectspaceapi.user.repository.UserRepository;
 import com.projectspace.projectspaceapi.user.request.CreateUserRequest;
+import com.projectspace.projectspaceapi.user.request.UpdateOrganizationRequest;
+import com.projectspace.projectspaceapi.user.request.UpdateUserRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,6 +48,28 @@ public class UserService {
         user.setEmail(createUserRequest.getEmail());
         user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
         user.setRole(createUserRequest.getRole());
+        userRepository.save(user);
+    }
+
+    public void updateUser(UpdateUserRequest updateUserRequest) {
+        User user = AuthenticationUserHelper.getCurrentUser(this);
+
+        if (updateUserRequest.getFirstName() != null) {
+            user.setFirstName(updateUserRequest.getFirstName());
+        }
+
+        if (updateUserRequest.getLastName() != null) {
+            user.setLastName(updateUserRequest.getLastName());
+        }
+
+        userRepository.save(user);
+    }
+
+    public void updateOrganization(UpdateOrganizationRequest updateOrganizationRequest) {
+        User user = AuthenticationUserHelper.getCurrentUser(this);
+
+        user.setOrganizationName(updateOrganizationRequest.getOrganizationName());
+
         userRepository.save(user);
     }
 }

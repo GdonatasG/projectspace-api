@@ -1,23 +1,19 @@
 package com.projectspace.projectspaceapi.user.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConstants;
 import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
 import com.projectspace.projectspaceapi.common.response.SuccessBody;
 import com.projectspace.projectspaceapi.user.model.User;
 import com.projectspace.projectspaceapi.user.model.VisualUser;
 import com.projectspace.projectspaceapi.user.request.CreateUserRequest;
+import com.projectspace.projectspaceapi.user.request.UpdateOrganizationRequest;
+import com.projectspace.projectspaceapi.user.request.UpdateUserRequest;
 import com.projectspace.projectspaceapi.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 @RestController
 @RequestMapping(value = AuthenticationConfigConstants.USER_URL)
@@ -28,6 +24,18 @@ public class UserController {
     @PostMapping
     public ResponseEntity createUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
         userService.createUser(createUserRequest);
+        return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
+        userService.updateUser(updateUserRequest);
+        return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
+    }
+
+    @PutMapping("/organization")
+    public ResponseEntity updateOrganization(@RequestBody @Valid UpdateOrganizationRequest updateOrganizationRequest) {
+        userService.updateOrganization(updateOrganizationRequest);
         return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
     }
 
@@ -42,6 +50,7 @@ public class UserController {
         User user = AuthenticationUserHelper.getCurrentUser(userService);
 
         VisualUser visualUser = new VisualUser();
+        visualUser.setId(user.getId());
         visualUser.setUsername(user.getUsername());
         visualUser.setFirstName(user.getFirstName());
         visualUser.setLastName(user.getLastName());

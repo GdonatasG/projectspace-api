@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @Data
 public class VisualUser {
+    private Long id;
     private String username;
     @JsonProperty("first_name")
     private String firstName;
