@@ -14,6 +14,7 @@ public class ProjectSpaceApiApplication {
         // Setting Spring Boot SetTimeZone
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
+
     public static void main(String[] args) {
         SpringApplication.run(ProjectSpaceApiApplication.class, args);
     }

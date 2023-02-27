@@ -4,7 +4,6 @@ import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConst
 import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
 import com.projectspace.projectspaceapi.common.response.SuccessBody;
 import com.projectspace.projectspaceapi.user.model.User;
-import com.projectspace.projectspaceapi.user.model.VisualUser;
 import com.projectspace.projectspaceapi.user.request.CreateUserRequest;
 import com.projectspace.projectspaceapi.user.request.UpdateOrganizationRequest;
 import com.projectspace.projectspaceapi.user.request.UpdateUserRequest;
@@ -46,20 +45,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<VisualUser> getCurrentUser() {
+    public ResponseEntity<User> getCurrentUser() {
         User user = AuthenticationUserHelper.getCurrentUser(userService);
-
-        VisualUser visualUser = new VisualUser();
-        visualUser.setId(user.getId());
-        visualUser.setUsername(user.getUsername());
-        visualUser.setFirstName(user.getFirstName());
-        visualUser.setLastName(user.getLastName());
-        visualUser.setEmail(user.getEmail());
-        visualUser.setOrganizationName(user.getOrganizationName());
-        visualUser.setRole(user.getRole());
-        visualUser.setCreatedAt(user.getCreatedAt());
-        visualUser.setUpdatedAt(user.getUpdatedAt());
-
-        return new ResponseEntity<>(visualUser, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
