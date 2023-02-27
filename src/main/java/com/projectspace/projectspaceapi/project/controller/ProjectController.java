@@ -4,6 +4,8 @@ import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConst
 import com.projectspace.projectspaceapi.common.response.SuccessBody;
 import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.project.request.CreateProjectRequest;
+import com.projectspace.projectspaceapi.project.request.UpdateProjectDescriptionRequest;
+import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
 import com.projectspace.projectspaceapi.project.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,20 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<SuccessBody> createProject(@RequestBody @Valid CreateProjectRequest createProjectRequest) {
         projectService.createProject(createProjectRequest);
+
+        return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<SuccessBody> updateProject(@RequestBody @Valid UpdateProjectRequest updateProjectRequest) {
+        projectService.updateProject(updateProjectRequest);
+
+        return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
+    }
+
+    @PutMapping("/description")
+    public ResponseEntity<SuccessBody> updateProjectDescription(@RequestBody @Valid UpdateProjectDescriptionRequest updateProjectDescriptionRequest) {
+        projectService.updateProjectDescription(updateProjectDescriptionRequest);
 
         return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
     }

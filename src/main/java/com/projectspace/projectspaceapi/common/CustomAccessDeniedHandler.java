@@ -3,6 +3,7 @@ package com.projectspace.projectspaceapi.common;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projectspace.projectspaceapi.common.response.Error;
 import com.projectspace.projectspaceapi.common.response.ErrorBody;
+import com.projectspace.projectspaceapi.common.response.ForbiddenError;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,11 +22,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         ObjectMapper mapper = new ObjectMapper();
-        ErrorBody error = new ErrorBody(
-                List.of(
-                        new Error("forbidden", "Forbidden!")
-                )
-        );
+        ErrorBody error = new ErrorBody(List.of(new ForbiddenError()));
         String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(error);
 
         PrintWriter out = response.getWriter();
