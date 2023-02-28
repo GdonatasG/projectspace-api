@@ -4,6 +4,7 @@ import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConst
 import com.projectspace.projectspaceapi.common.response.SuccessBody;
 import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.project.request.CreateProjectRequest;
+import com.projectspace.projectspaceapi.project.request.DeleteProjectRequest;
 import com.projectspace.projectspaceapi.project.request.UpdateProjectDescriptionRequest;
 import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
 import com.projectspace.projectspaceapi.project.service.ProjectService;
@@ -46,4 +47,13 @@ public class ProjectController {
 
         return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
     }
+
+    @DeleteMapping
+    public ResponseEntity<SuccessBody> deleteProject(@RequestBody @Valid DeleteProjectRequest deleteProjectRequest){
+        projectService.deleteProject(deleteProjectRequest);
+
+        return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
+    }
+
+
 }

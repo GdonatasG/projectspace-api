@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
+    private final AuthenticationUserHelper authenticationUserHelper;
+
     @PostMapping
     public ResponseEntity createUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
         userService.createUser(createUserRequest);
@@ -46,7 +48,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<User> getCurrentUser() {
-        User user = AuthenticationUserHelper.getCurrentUser(userService);
+        User user = authenticationUserHelper.getCurrentUser();
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }

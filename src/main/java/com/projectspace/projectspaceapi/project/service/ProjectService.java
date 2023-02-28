@@ -7,22 +7,21 @@ import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
 import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.project.repository.ProjectRepository;
 import com.projectspace.projectspaceapi.project.request.CreateProjectRequest;
+import com.projectspace.projectspaceapi.project.request.DeleteProjectRequest;
 import com.projectspace.projectspaceapi.project.request.UpdateProjectDescriptionRequest;
 import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
 import com.projectspace.projectspaceapi.user.model.User;
-import com.projectspace.projectspaceapi.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepository;
-    private final UserService userService;
+    private final AuthenticationUserHelper authenticationUserHelper;
 
     public Project readById(Long id) {
         return projectRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -35,7 +34,7 @@ public class ProjectService {
             throw new AlreadyTakenException("Project name is already taken!");
         }
 
-        User currentUser = AuthenticationUserHelper.getCurrentUser(userService);
+        User currentUser = authenticationUserHelper.getCurrentUser();
 
         Project project = new Project();
 
@@ -56,7 +55,7 @@ public class ProjectService {
         }
 
         Project project = byId.get();
-        User currentUser = AuthenticationUserHelper.getCurrentUser(userService);
+        User currentUser = authenticationUserHelper.getCurrentUser();
 
         if (!project.getOwner().getId().equals(currentUser.getId())) {
             throw new ForbiddenException();
@@ -85,7 +84,7 @@ public class ProjectService {
         }
 
         Project project = byId.get();
-        User currentUser = AuthenticationUserHelper.getCurrentUser(userService);
+        User currentUser = authenticationUserHelper.getCurrentUser();
 
         if (!project.getOwner().getId().equals(currentUser.getId())) {
             throw new ForbiddenException();
@@ -98,5 +97,22 @@ public class ProjectService {
         }
 
         projectRepository.save(project);
+    }
+
+    public void deleteProject(DeleteProjectRequest deleteProjectRequest) {
+        Optional<Project> byId = projectRepository.findById(deleteProjectRequest.getProjectId());
+
+        if (byId.isEmpty()) {
+            throw new NotFoundException("Project not found!");
+        }
+
+        Project project = byId.get();
+        User currentUser = authenticationUserHelper.getCurrentUser();
+
+        if (!project.getOwner().getId().equals(currentUser.getId())) {
+            throw new ForbiddenException();
+        }
+
+        projectRepository.delete(project);
     }
 }
