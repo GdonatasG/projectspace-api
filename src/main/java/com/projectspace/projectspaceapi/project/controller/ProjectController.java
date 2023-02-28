@@ -1,6 +1,7 @@
 package com.projectspace.projectspaceapi.project.controller;
 
 import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConstants;
+import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
 import com.projectspace.projectspaceapi.common.response.SuccessBody;
 import com.projectspace.projectspaceapi.common.response.SuccessBodyList;
 import com.projectspace.projectspaceapi.project.model.Project;
@@ -33,15 +34,16 @@ public class ProjectController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/currentUser")
-    public ResponseEntity<SuccessBodyList<Project>> getCurrentUserProjects() {
-        List<Project> projects = projectService.getCurrentUserProjects();
+    @GetMapping
+    public ResponseEntity<SuccessBodyList<Project>> getProjects(
+            @RequestParam(name = "owner_id", required = false) Long ownerId,
+            @RequestParam(name = "not_current_user", defaultValue = "false") Boolean notCurrentUser) {
+        List<Project> projects = projectService.getProjects(ownerId, notCurrentUser);
 
         SuccessBodyList<Project> response = new SuccessBodyList<>(projects);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 
     @PostMapping
     public ResponseEntity<SuccessBody> createProject(@RequestBody @Valid CreateProjectRequest createProjectRequest) {

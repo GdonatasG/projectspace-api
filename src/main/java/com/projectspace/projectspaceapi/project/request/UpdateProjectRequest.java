@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class UpdateProjectRequest {
 
-    @NotNull(message = "Project id is required.")
+    @NotNull(message = "ProjectId is required.")
     private Long projectId;
 
     @Nullable

@@ -6,10 +6,7 @@ import com.projectspace.projectspaceapi.common.exception.NotFoundException;
 import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
 import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.project.repository.ProjectRepository;
-import com.projectspace.projectspaceapi.project.request.CreateProjectRequest;
-import com.projectspace.projectspaceapi.project.request.DeleteProjectRequest;
-import com.projectspace.projectspaceapi.project.request.UpdateProjectDescriptionRequest;
-import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
+import com.projectspace.projectspaceapi.project.request.*;
 import com.projectspace.projectspaceapi.user.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +25,16 @@ public class ProjectService {
         return projectRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    public List<Project> getCurrentUserProjects() {
-        User currentUser = authenticationUserHelper.getCurrentUser();
-        return projectRepository.findAllByOwnerId(currentUser.getId());
+    public List<Project> getProjects(Long ownerId, Boolean notCurrentUser) {
+        if (ownerId != null) {
+            return projectRepository.findAllByOwnerId(ownerId);
+        }
+
+        if (notCurrentUser) {
+            return projectRepository.findAllByOwnerIdNot(authenticationUserHelper.getCurrentUser().getId());
+        }
+
+        return projectRepository.findAll();
     }
 
     public void createProject(CreateProjectRequest createProjectRequest) {
