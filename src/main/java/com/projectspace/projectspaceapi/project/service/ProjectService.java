@@ -15,6 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,6 +26,11 @@ public class ProjectService {
 
     public Project readById(Long id) {
         return projectRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    public List<Project> getCurrentUserProjects() {
+        User currentUser = authenticationUserHelper.getCurrentUser();
+        return projectRepository.findAllByOwnerId(currentUser.getId());
     }
 
     public void createProject(CreateProjectRequest createProjectRequest) {

@@ -2,6 +2,7 @@ package com.projectspace.projectspaceapi.project.controller;
 
 import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConstants;
 import com.projectspace.projectspaceapi.common.response.SuccessBody;
+import com.projectspace.projectspaceapi.common.response.SuccessBodyList;
 import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.project.request.CreateProjectRequest;
 import com.projectspace.projectspaceapi.project.request.DeleteProjectRequest;
@@ -14,6 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping(value = AuthenticationConfigConstants.PROJECT_URL)
 @RequiredArgsConstructor
@@ -21,11 +25,23 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Project> getById(@PathVariable int id) {
+    public ResponseEntity<SuccessBody<Project>> getById(@PathVariable int id) {
         Project project = projectService.readById(Integer.toUnsignedLong(id));
 
-        return new ResponseEntity<>(project, HttpStatus.OK);
+        SuccessBody<Project> response = new SuccessBody<>(project);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/currentUser")
+    public ResponseEntity<SuccessBodyList<Project>> getCurrentUserProjects() {
+        List<Project> projects = projectService.getCurrentUserProjects();
+
+        SuccessBodyList<Project> response = new SuccessBodyList<>(projects);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
     @PostMapping
     public ResponseEntity<SuccessBody> createProject(@RequestBody @Valid CreateProjectRequest createProjectRequest) {
@@ -49,11 +65,10 @@ public class ProjectController {
     }
 
     @DeleteMapping
-    public ResponseEntity<SuccessBody> deleteProject(@RequestBody @Valid DeleteProjectRequest deleteProjectRequest){
+    public ResponseEntity<SuccessBody> deleteProject(@RequestBody @Valid DeleteProjectRequest deleteProjectRequest) {
         projectService.deleteProject(deleteProjectRequest);
 
-        return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessBody<>(), HttpStatus.OK);
     }
-
 
 }

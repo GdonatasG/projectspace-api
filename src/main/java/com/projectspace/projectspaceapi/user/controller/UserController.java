@@ -23,32 +23,26 @@ public class UserController {
     private final AuthenticationUserHelper authenticationUserHelper;
 
     @PostMapping
-    public ResponseEntity createUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
+    public ResponseEntity<SuccessBody> createUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
         userService.createUser(createUserRequest);
         return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<SuccessBody> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
         userService.updateUser(updateUserRequest);
         return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
     }
 
     @PutMapping("/organization")
-    public ResponseEntity updateOrganization(@RequestBody @Valid UpdateOrganizationRequest updateOrganizationRequest) {
+    public ResponseEntity<SuccessBody> updateOrganization(@RequestBody @Valid UpdateOrganizationRequest updateOrganizationRequest) {
         userService.updateOrganization(updateOrganizationRequest);
         return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    // TODO: delete, just for testing purposes
-    public ResponseEntity test() {
-        return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
-    }
-
     @GetMapping
-    public ResponseEntity<User> getCurrentUser() {
+    public ResponseEntity<SuccessBody<User>> getCurrentUser() {
         User user = authenticationUserHelper.getCurrentUser();
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(new SuccessBody<>(user), HttpStatus.OK);
     }
 }
