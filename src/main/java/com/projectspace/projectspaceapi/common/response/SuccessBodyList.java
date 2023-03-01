@@ -6,15 +6,14 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @Data
-public class SuccessBody<T> {
+public class SuccessBodyList<T> {
     private boolean success = true;
-    private T data;
+    private List<T> data;
 
-    public SuccessBody() {
+    public SuccessBodyList() {
     }
 
-    public SuccessBody(T data) {
+    public SuccessBodyList(List<T> data) {
         this.data = data;
     }
-
 }

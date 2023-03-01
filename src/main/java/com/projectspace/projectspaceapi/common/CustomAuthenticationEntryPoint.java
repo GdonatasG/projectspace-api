@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConstants;
 import com.projectspace.projectspaceapi.common.response.Error;
 import com.projectspace.projectspaceapi.common.response.ErrorBody;
+import com.projectspace.projectspaceapi.common.response.ForbiddenError;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,11 +27,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         String header = request.getHeader(AuthenticationConfigConstants.HEADER_STRING);
 
         if (header == null) {
-            ErrorBody error = new ErrorBody(
-                    List.of(
-                            new Error("forbidden", "Forbidden!")
-                    )
-            );
+            ErrorBody error = new ErrorBody(List.of(new ForbiddenError()));
 
             showErrorResponse(response, error, HttpServletResponse.SC_FORBIDDEN);
 

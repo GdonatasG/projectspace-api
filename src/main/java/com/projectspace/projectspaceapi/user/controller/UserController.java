@@ -4,7 +4,6 @@ import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConst
 import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
 import com.projectspace.projectspaceapi.common.response.SuccessBody;
 import com.projectspace.projectspaceapi.user.model.User;
-import com.projectspace.projectspaceapi.user.model.VisualUser;
 import com.projectspace.projectspaceapi.user.request.CreateUserRequest;
 import com.projectspace.projectspaceapi.user.request.UpdateOrganizationRequest;
 import com.projectspace.projectspaceapi.user.request.UpdateUserRequest;
@@ -21,45 +20,29 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
+    private final AuthenticationUserHelper authenticationUserHelper;
+
     @PostMapping
-    public ResponseEntity createUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
+    public ResponseEntity<SuccessBody> createUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
         userService.createUser(createUserRequest);
         return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<SuccessBody> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
         userService.updateUser(updateUserRequest);
         return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
     }
 
     @PutMapping("/organization")
-    public ResponseEntity updateOrganization(@RequestBody @Valid UpdateOrganizationRequest updateOrganizationRequest) {
+    public ResponseEntity<SuccessBody> updateOrganization(@RequestBody @Valid UpdateOrganizationRequest updateOrganizationRequest) {
         userService.updateOrganization(updateOrganizationRequest);
         return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    // TODO: delete, just for testing purposes
-    public ResponseEntity test() {
-        return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
-    }
-
     @GetMapping
-    public ResponseEntity<VisualUser> getCurrentUser() {
-        User user = AuthenticationUserHelper.getCurrentUser(userService);
-
-        VisualUser visualUser = new VisualUser();
-        visualUser.setId(user.getId());
-        visualUser.setUsername(user.getUsername());
-        visualUser.setFirstName(user.getFirstName());
-        visualUser.setLastName(user.getLastName());
-        visualUser.setEmail(user.getEmail());
-        visualUser.setOrganizationName(user.getOrganizationName());
-        visualUser.setRole(user.getRole());
-        visualUser.setCreatedAt(user.getCreatedAt());
-        visualUser.setUpdatedAt(user.getUpdatedAt());
-
-        return new ResponseEntity<>(visualUser, HttpStatus.OK);
+    public ResponseEntity<SuccessBody<User>> getCurrentUser() {
+        User user = authenticationUserHelper.getCurrentUser();
+        return new ResponseEntity<>(new SuccessBody<>(user), HttpStatus.OK);
     }
 }

@@ -20,6 +20,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    private final AuthenticationUserHelper authenticationUserHelper;
+
     public User readUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
     }
@@ -52,7 +54,7 @@ public class UserService {
     }
 
     public void updateUser(UpdateUserRequest updateUserRequest) {
-        User user = AuthenticationUserHelper.getCurrentUser(this);
+        User user = authenticationUserHelper.getCurrentUser();
 
         if (updateUserRequest.getFirstName() != null) {
             user.setFirstName(updateUserRequest.getFirstName());
@@ -66,7 +68,7 @@ public class UserService {
     }
 
     public void updateOrganization(UpdateOrganizationRequest updateOrganizationRequest) {
-        User user = AuthenticationUserHelper.getCurrentUser(this);
+        User user = authenticationUserHelper.getCurrentUser();
 
         user.setOrganizationName(updateOrganizationRequest.getOrganizationName());
 
