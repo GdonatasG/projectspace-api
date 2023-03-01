@@ -67,7 +67,8 @@ public class ProjectService {
         Project project = byId.get();
         User currentUser = authenticationUserHelper.getCurrentUser();
 
-        if (!project.getOwner().getId().equals(currentUser.getId())) {
+
+        if (project.getOwner() == null || !project.getOwner().getId().equals(currentUser.getId())) {
             throw new ForbiddenException();
         }
 
@@ -96,7 +97,7 @@ public class ProjectService {
         Project project = byId.get();
         User currentUser = authenticationUserHelper.getCurrentUser();
 
-        if (!project.getOwner().getId().equals(currentUser.getId())) {
+        if (project.getOwner() == null || !project.getOwner().getId().equals(currentUser.getId())) {
             throw new ForbiddenException();
         }
 
@@ -119,7 +120,7 @@ public class ProjectService {
         Project project = byId.get();
         User currentUser = authenticationUserHelper.getCurrentUser();
 
-        if (!project.getOwner().getId().equals(currentUser.getId())) {
+        if (project.getOwner() == null || !project.getOwner().getId().equals(currentUser.getId())) {
             throw new ForbiddenException();
         }
 
