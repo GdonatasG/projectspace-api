@@ -114,6 +114,7 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
+    @Transactional
     public void deleteProject(DeleteProjectRequest deleteProjectRequest) {
         Optional<Project> byId = projectRepository.findById(deleteProjectRequest.getProjectId());
 
@@ -128,6 +129,8 @@ public class ProjectService {
             throw new ForbiddenException();
         }
 
+        // TODO: delete all invitations associated with the project
+        projectMemberService.deleteAllByProjectId(project.getId());
         projectRepository.delete(project);
     }
 }

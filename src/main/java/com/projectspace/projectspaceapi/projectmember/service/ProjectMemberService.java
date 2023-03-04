@@ -15,4 +15,9 @@ public class ProjectMemberService {
     public void createMember(ProjectMember projectMember) {
         projectMemberRepository.save(projectMember);
     }
+
+    @Transactional
+    public void deleteAllByProjectId(Long projectId) {
+        projectMemberRepository.deleteAllByProjectId(projectId);
+    }
 }
