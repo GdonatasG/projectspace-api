@@ -1,4 +1,4 @@
-package com.projectspace.projectspaceapi.projectmember;
+package com.projectspace.projectspaceapi.projectmember.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

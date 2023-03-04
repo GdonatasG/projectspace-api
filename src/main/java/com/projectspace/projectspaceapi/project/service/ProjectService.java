@@ -9,8 +9,8 @@ import com.projectspace.projectspaceapi.project.repository.ProjectRepository;
 import com.projectspace.projectspaceapi.project.request.CreateProjectRequest;
 import com.projectspace.projectspaceapi.project.request.DeleteProjectRequest;
 import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
-import com.projectspace.projectspaceapi.projectmember.ProjectMember;
-import com.projectspace.projectspaceapi.projectmember.ProjectMemberLevel;
+import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
+import com.projectspace.projectspaceapi.projectmember.model.ProjectMemberLevel;
 import com.projectspace.projectspaceapi.projectmember.service.ProjectMemberService;
 import com.projectspace.projectspaceapi.user.model.User;
 import jakarta.persistence.EntityNotFoundException;
@@ -45,6 +45,10 @@ public class ProjectService {
         }
 
         return projectRepository.findAll();
+    }
+
+    public List<Project> getUserAvailableProjects() {
+        return projectRepository.findAllByProjectMembers_UserId(authenticationUserHelper.getCurrentUser().getId());
     }
 
     @Transactional

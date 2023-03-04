@@ -1,6 +1,6 @@
 package com.projectspace.projectspaceapi.projectmember.service;
 
-import com.projectspace.projectspaceapi.projectmember.ProjectMember;
+import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
 import com.projectspace.projectspaceapi.projectmember.repository.ProjectMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

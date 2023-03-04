@@ -1,6 +1,6 @@
 package com.projectspace.projectspaceapi.projectmember.repository;
 
-import com.projectspace.projectspaceapi.projectmember.ProjectMember;
+import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

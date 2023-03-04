@@ -42,6 +42,15 @@ public class ProjectController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/available")
+    public ResponseEntity<SuccessBodyList<Project>> getUserAvailableProjects() {
+        List<Project> projects = projectService.getUserAvailableProjects();
+
+        SuccessBodyList<Project> response = new SuccessBodyList<>(projects);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<SuccessBody> createProject(@RequestBody @Valid CreateProjectRequest createProjectRequest) throws Exception {
         projectService.createProject(createProjectRequest);

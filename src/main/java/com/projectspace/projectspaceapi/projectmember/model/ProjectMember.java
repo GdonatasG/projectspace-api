@@ -1,4 +1,4 @@
-package com.projectspace.projectspaceapi.projectmember;
+package com.projectspace.projectspaceapi.projectmember.model;
 
 import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.user.model.User;
