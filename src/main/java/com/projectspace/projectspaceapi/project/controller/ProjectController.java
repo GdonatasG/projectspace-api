@@ -6,7 +6,6 @@ import com.projectspace.projectspaceapi.common.response.SuccessBodyList;
 import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.project.request.CreateProjectRequest;
 import com.projectspace.projectspaceapi.project.request.DeleteProjectRequest;
-import com.projectspace.projectspaceapi.project.request.UpdateProjectDescriptionRequest;
 import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
 import com.projectspace.projectspaceapi.project.service.ProjectService;
 import jakarta.validation.Valid;
@@ -53,13 +52,6 @@ public class ProjectController {
     @PutMapping
     public ResponseEntity<SuccessBody> updateProject(@RequestBody @Valid UpdateProjectRequest updateProjectRequest) {
         projectService.updateProject(updateProjectRequest);
-
-        return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
-    }
-
-    @PutMapping("/description")
-    public ResponseEntity<SuccessBody> updateProjectDescription(@RequestBody @Valid UpdateProjectDescriptionRequest updateProjectDescriptionRequest) {
-        projectService.updateProjectDescription(updateProjectDescriptionRequest);
 
         return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
     }

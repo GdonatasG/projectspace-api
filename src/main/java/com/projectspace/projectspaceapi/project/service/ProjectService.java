@@ -8,18 +8,15 @@ import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.project.repository.ProjectRepository;
 import com.projectspace.projectspaceapi.project.request.CreateProjectRequest;
 import com.projectspace.projectspaceapi.project.request.DeleteProjectRequest;
-import com.projectspace.projectspaceapi.project.request.UpdateProjectDescriptionRequest;
 import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
 import com.projectspace.projectspaceapi.projectmember.ProjectMember;
 import com.projectspace.projectspaceapi.projectmember.ProjectMemberLevel;
-import com.projectspace.projectspaceapi.projectmember.repository.ProjectMemberRepository;
 import com.projectspace.projectspaceapi.projectmember.service.ProjectMemberService;
 import com.projectspace.projectspaceapi.user.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 import java.util.Optional;
@@ -106,27 +103,8 @@ public class ProjectService {
             project.setName(updateProjectRequest.getName());
         }
 
-        projectRepository.save(project);
-    }
-
-    public void updateProjectDescription(UpdateProjectDescriptionRequest updateProjectDescriptionRequest) {
-        Optional<Project> byId = projectRepository.findById(updateProjectDescriptionRequest.getProjectId());
-
-        if (byId.isEmpty()) {
-            throw new NotFoundException("Project not found!");
-        }
-
-        Project project = byId.get();
-        User currentUser = authenticationUserHelper.getCurrentUser();
-
-        if (project.getOwner() == null || !project.getOwner().getId().equals(currentUser.getId())) {
-            throw new ForbiddenException();
-        }
-
-        if (updateProjectDescriptionRequest.getDescription() != null) {
-            project.setDescription(updateProjectDescriptionRequest.getDescription());
-        } else {
-            project.setDescription(null);
+        if (updateProjectRequest.getDescription() != null) {
+            project.setDescription(updateProjectRequest.getDescription());
         }
 
         projectRepository.save(project);
