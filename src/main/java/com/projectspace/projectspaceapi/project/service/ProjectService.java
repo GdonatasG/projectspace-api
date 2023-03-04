@@ -31,20 +31,16 @@ public class ProjectService {
 
     private final AuthenticationUserHelper authenticationUserHelper;
 
-    public Project readById(Long id) {
+    public Project getByIdIfCurrentUserIsProjectMember(Long id) {
+        User currentUser = authenticationUserHelper.getCurrentUser();
+
+        Optional<ProjectMember> projectMember = projectMemberRepository.findByProjectIdAndUserId(id, currentUser.getId());
+
+        if (projectMember.isEmpty()) {
+            throw new ForbiddenException();
+        }
+
         return projectRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-    }
-
-    public List<Project> getProjects(Long ownerId, Boolean notCurrentUser) {
-        if (ownerId != null) {
-            return projectRepository.findAllByOwnerId(ownerId);
-        }
-
-        if (notCurrentUser) {
-            return projectRepository.findAllByOwnerIdNot(authenticationUserHelper.getCurrentUser().getId());
-        }
-
-        return projectRepository.findAll();
     }
 
     public List<Project> getUserAvailableProjects() {

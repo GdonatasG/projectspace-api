@@ -24,20 +24,9 @@ public class ProjectController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SuccessBody<Project>> getById(@PathVariable int id) {
-        Project project = projectService.readById(Integer.toUnsignedLong(id));
+        Project project = projectService.getByIdIfCurrentUserIsProjectMember(Integer.toUnsignedLong(id));
 
         SuccessBody<Project> response = new SuccessBody<>(project);
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping
-    public ResponseEntity<SuccessBodyList<Project>> getProjects(
-            @RequestParam(name = "owner_id", required = false) Long ownerId,
-            @RequestParam(name = "not_current_user", defaultValue = "false") Boolean notCurrentUser) {
-        List<Project> projects = projectService.getProjects(ownerId, notCurrentUser);
-
-        SuccessBodyList<Project> response = new SuccessBodyList<>(projects);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
