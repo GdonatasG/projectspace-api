@@ -3,6 +3,7 @@ package com.projectspace.projectspaceapi.user.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.projectspace.projectspaceapi.project.model.Project;
+import com.projectspace.projectspaceapi.projectmember.ProjectMember;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,4 +63,8 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "owner")
     private List<Project> projects;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<ProjectMember> memberInProjects;
 }

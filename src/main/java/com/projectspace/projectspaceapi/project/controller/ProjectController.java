@@ -1,7 +1,6 @@
 package com.projectspace.projectspaceapi.project.controller;
 
 import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConstants;
-import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
 import com.projectspace.projectspaceapi.common.response.SuccessBody;
 import com.projectspace.projectspaceapi.common.response.SuccessBodyList;
 import com.projectspace.projectspaceapi.project.model.Project;
@@ -16,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -46,7 +44,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<SuccessBody> createProject(@RequestBody @Valid CreateProjectRequest createProjectRequest) {
+    public ResponseEntity<SuccessBody> createProject(@RequestBody @Valid CreateProjectRequest createProjectRequest) throws Exception {
         projectService.createProject(createProjectRequest);
 
         return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);

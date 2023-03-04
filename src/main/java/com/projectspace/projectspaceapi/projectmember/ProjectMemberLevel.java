@@ -1,8 +1,6 @@
-package com.projectspace.projectspaceapi.project.model;
+package com.projectspace.projectspaceapi.projectmember;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.projectspace.projectspaceapi.projectmember.ProjectMember;
-import com.projectspace.projectspaceapi.user.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,25 +11,18 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "project")
+@Table(name = "project_member_level")
 @NoArgsConstructor
-public class Project {
+public class ProjectMemberLevel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private User owner;
-
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Column()
-    private String description;
-
     @JsonIgnore
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "level")
     private List<ProjectMember> projectMembers;
 }

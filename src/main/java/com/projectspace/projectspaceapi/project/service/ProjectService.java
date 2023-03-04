@@ -6,11 +6,20 @@ import com.projectspace.projectspaceapi.common.exception.NotFoundException;
 import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
 import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.project.repository.ProjectRepository;
-import com.projectspace.projectspaceapi.project.request.*;
+import com.projectspace.projectspaceapi.project.request.CreateProjectRequest;
+import com.projectspace.projectspaceapi.project.request.DeleteProjectRequest;
+import com.projectspace.projectspaceapi.project.request.UpdateProjectDescriptionRequest;
+import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
+import com.projectspace.projectspaceapi.projectmember.ProjectMember;
+import com.projectspace.projectspaceapi.projectmember.ProjectMemberLevel;
+import com.projectspace.projectspaceapi.projectmember.repository.ProjectMemberRepository;
+import com.projectspace.projectspaceapi.projectmember.service.ProjectMemberService;
 import com.projectspace.projectspaceapi.user.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +27,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
+
     private final ProjectRepository projectRepository;
+
+    private final ProjectMemberService projectMemberService;
+
     private final AuthenticationUserHelper authenticationUserHelper;
 
     public Project readById(Long id) {
@@ -37,6 +50,7 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
+    @Transactional
     public void createProject(CreateProjectRequest createProjectRequest) {
         Optional<Project> byName = projectRepository.findByName(createProjectRequest.getName());
 
@@ -52,9 +66,17 @@ public class ProjectService {
         project.setName(createProjectRequest.getName());
         project.setDescription(createProjectRequest.getDescription());
 
-        // TODO: Add current user as a project member into ProjectMember table using transactions
+        ProjectMemberLevel projectMemberLevel = new ProjectMemberLevel();
+        projectMemberLevel.setId(1L);
+
+
+        ProjectMember projectMember = new ProjectMember();
+        projectMember.setUser(currentUser);
+        projectMember.setProject(project);
+        projectMember.setLevel(projectMemberLevel);
 
         projectRepository.save(project);
+        projectMemberService.createMember(projectMember);
     }
 
     public void updateProject(UpdateProjectRequest updateProjectRequest) {
