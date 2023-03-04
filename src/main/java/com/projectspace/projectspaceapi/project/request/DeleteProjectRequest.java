@@ -6,6 +6,6 @@ import lombok.Data;
 
 @Data
 public class DeleteProjectRequest {
-    @NotNull(message = "ProjectId is required.")
+    @NotNull(message = "projectId is required.")
     private Long projectId;
 }

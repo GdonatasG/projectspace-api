@@ -11,7 +11,7 @@ import com.projectspace.projectspaceapi.project.request.DeleteProjectRequest;
 import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMemberLevel;
-import com.projectspace.projectspaceapi.projectmember.service.ProjectMemberService;
+import com.projectspace.projectspaceapi.projectmember.repository.ProjectMemberRepository;
 import com.projectspace.projectspaceapi.user.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
 
-    private final ProjectMemberService projectMemberService;
+    private final ProjectMemberRepository projectMemberRepository;
 
     private final AuthenticationUserHelper authenticationUserHelper;
 
@@ -77,7 +77,7 @@ public class ProjectService {
         projectMember.setLevel(projectMemberLevel);
 
         projectRepository.save(project);
-        projectMemberService.createMember(projectMember);
+        projectMemberRepository.save(projectMember);
     }
 
     public void updateProject(UpdateProjectRequest updateProjectRequest) {
@@ -130,7 +130,7 @@ public class ProjectService {
         }
 
         // TODO: delete all invitations associated with the project
-        projectMemberService.deleteAllByProjectId(project.getId());
+        projectMemberRepository.deleteAllByProjectId(project.getId());
         projectRepository.delete(project);
     }
 }
