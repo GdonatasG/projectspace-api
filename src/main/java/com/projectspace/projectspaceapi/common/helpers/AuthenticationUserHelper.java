@@ -6,11 +6,11 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConstants;
 import com.projectspace.projectspaceapi.user.model.User;
 import com.projectspace.projectspaceapi.user.repository.UserRepository;
-import com.projectspace.projectspaceapi.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -19,6 +19,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class AuthenticationUserHelper {
     private final UserRepository userRepository;
 
+    @Transactional
     public User getCurrentUser() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String token = request.getHeader("Authorization").split(" ")[1];

@@ -60,7 +60,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorBody error = new ErrorBody(List.of(new ForbiddenError()));
 
 
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 }
 
