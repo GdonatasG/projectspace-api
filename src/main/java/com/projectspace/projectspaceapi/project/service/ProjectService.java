@@ -10,7 +10,7 @@ import com.projectspace.projectspaceapi.project.request.CreateProjectRequest;
 import com.projectspace.projectspaceapi.project.request.DeleteProjectRequest;
 import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
-import com.projectspace.projectspaceapi.projectmember.model.ProjectMemberLevel;
+import com.projectspace.projectspaceapi.projectmemberlevel.model.ProjectMemberLevel;
 import com.projectspace.projectspaceapi.projectmember.repository.ProjectMemberRepository;
 import com.projectspace.projectspaceapi.user.model.User;
 import jakarta.persistence.EntityNotFoundException;

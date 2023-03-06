@@ -1,6 +1,7 @@
 package com.projectspace.projectspaceapi.projectmember.model;
 
 import com.projectspace.projectspaceapi.project.model.Project;
+import com.projectspace.projectspaceapi.projectmemberlevel.model.ProjectMemberLevel;
 import com.projectspace.projectspaceapi.user.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;

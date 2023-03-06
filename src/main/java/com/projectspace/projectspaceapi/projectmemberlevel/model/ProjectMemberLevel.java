@@ -1,6 +1,7 @@
-package com.projectspace.projectspaceapi.projectmember.model;
+package com.projectspace.projectspaceapi.projectmemberlevel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
