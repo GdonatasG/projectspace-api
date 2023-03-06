@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Sort;
 
 @Getter
 @Setter
@@ -14,6 +15,11 @@ import lombok.Setter;
         {@UniqueConstraint(name = "project_member_unique", columnNames = {"user_id", "project_id"})})
 @NoArgsConstructor
 public class ProjectMember {
+
+    @Transient
+    public static final Sort SORT_BY_MEMBER_LEVEL_ASC =
+            Sort.by(Sort.Direction.ASC, "level.id");
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
