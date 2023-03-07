@@ -11,7 +11,6 @@ import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.project.repository.ProjectRepository;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
 import com.projectspace.projectspaceapi.projectmember.repository.ProjectMemberRepository;
-import com.projectspace.projectspaceapi.projectmemberlevel.model.ProjectMemberLevel;
 import com.projectspace.projectspaceapi.user.model.User;
 import com.projectspace.projectspaceapi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -84,5 +83,11 @@ public class InvitationService {
         invitation.setProject(project.get());
 
         invitationRepository.save(invitation);
+    }
+
+    public List<Invitation> getCurrentUserInvitations() {
+        User currentUser = authenticationUserHelper.getCurrentUser();
+
+        return invitationRepository.findAllByUser_Id(currentUser.getId());
     }
 }
