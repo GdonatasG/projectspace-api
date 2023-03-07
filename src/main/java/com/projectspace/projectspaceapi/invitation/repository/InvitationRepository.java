@@ -10,4 +10,6 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
     Optional<Invitation> findByUserEmail(String email);
 
     List<Invitation> findAllByUser_Id(Long userId);
+
+    List<Invitation> findAllByProject_Id(Long projectId);
 }

@@ -90,4 +90,22 @@ public class InvitationService {
 
         return invitationRepository.findAllByUser_Id(currentUser.getId());
     }
+
+    public List<Invitation> getProjectInvitations(Long projectId) {
+        User currentUser = authenticationUserHelper.getCurrentUser();
+
+        Optional<ProjectMember> currentUserAsProjectMember = projectMemberRepository.findByProjectIdAndUserId(projectId, currentUser.getId());
+
+        if (currentUserAsProjectMember.isEmpty()) {
+            throw new ForbiddenException();
+        }
+
+        String currentUserLevel = currentUserAsProjectMember.get().getLevel().getName();
+
+        if (!Objects.equals(currentUserLevel, "OWNER") && !Objects.equals(currentUserLevel, "MODERATOR")) {
+            throw new ForbiddenException();
+        }
+
+        return invitationRepository.findAllByProject_Id(projectId);
+    }
 }

@@ -35,4 +35,11 @@ public class InvitationController {
         return new ResponseEntity<>(new SuccessBodyList<>(invitations), HttpStatus.OK);
     }
 
+    @GetMapping("")
+    public ResponseEntity<SuccessBodyList<Invitation>> getProjectInvitations(@RequestParam("project_id") int projectId) {
+        List<Invitation> invitations = invitationService.getProjectInvitations(Integer.toUnsignedLong(projectId));
+
+        return new ResponseEntity<>(new SuccessBodyList<>(invitations), HttpStatus.OK);
+    }
+
 }
