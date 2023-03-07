@@ -108,4 +108,28 @@ public class InvitationService {
 
         return invitationRepository.findAllByProject_Id(projectId);
     }
+
+    public void deleteInvitation(Long invitationId) {
+        Optional<Invitation> invitation = invitationRepository.findById(invitationId);
+
+        if (invitation.isEmpty()) {
+            throw new NotFoundException("Invitation not found!");
+        }
+
+        User currentUser = authenticationUserHelper.getCurrentUser();
+
+        Optional<ProjectMember> currentUserAsProjectMember = projectMemberRepository.findByProjectIdAndUserId(invitation.get().getProject().getId(), currentUser.getId());
+
+        if (currentUserAsProjectMember.isEmpty()) {
+            throw new ForbiddenException();
+        }
+
+        String currentUserLevel = currentUserAsProjectMember.get().getLevel().getName();
+
+        if (!Objects.equals(currentUserLevel, "OWNER") && !Objects.equals(currentUserLevel, "MODERATOR")) {
+            throw new ForbiddenException();
+        }
+
+        invitationRepository.delete(invitation.get());
+    }
 }

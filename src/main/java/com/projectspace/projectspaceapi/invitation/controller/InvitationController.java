@@ -42,4 +42,11 @@ public class InvitationController {
         return new ResponseEntity<>(new SuccessBodyList<>(invitations), HttpStatus.OK);
     }
 
+    @DeleteMapping
+    public ResponseEntity<SuccessBody> delete(@RequestParam("id") int id) {
+        invitationService.deleteInvitation(Integer.toUnsignedLong(id));
+
+        return new ResponseEntity<>(new SuccessBody<>(), HttpStatus.OK);
+    }
+
 }
