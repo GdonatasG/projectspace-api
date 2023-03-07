@@ -9,4 +9,6 @@ public class AuthenticationConfigConstants {
     public static final String PROJECT_URL = "/api/project";
     public static final String PROJECT_MEMBER_URL = PROJECT_URL + "/members";
     public static final String PROJECT_MEMBER_LEVEL_URL = PROJECT_URL + "/member-levels";
+    public static final String PROJECT_INVITATIONS_URL = PROJECT_URL + "/invitations";
+
 }

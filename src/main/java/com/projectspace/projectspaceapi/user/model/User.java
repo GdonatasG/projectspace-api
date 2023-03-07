@@ -2,6 +2,7 @@ package com.projectspace.projectspaceapi.user.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.projectspace.projectspaceapi.invitation.model.Invitation;
 import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
 import jakarta.persistence.*;
@@ -54,7 +55,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Column(nullable = false)
-    @JsonProperty( value = "password", access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(nullable = false)
@@ -67,4 +68,8 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<ProjectMember> memberInProjects;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Invitation> invitations;
 }

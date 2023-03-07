@@ -1,6 +1,7 @@
 package com.projectspace.projectspaceapi.project.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.projectspace.projectspaceapi.invitation.model.Invitation;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
 import com.projectspace.projectspaceapi.user.model.User;
 import jakarta.persistence.*;
@@ -34,4 +35,8 @@ public class Project {
     @JsonIgnore
     @OneToMany(mappedBy = "project")
     private List<ProjectMember> projectMembers;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "project")
+    private List<Invitation> invitations;
 }
