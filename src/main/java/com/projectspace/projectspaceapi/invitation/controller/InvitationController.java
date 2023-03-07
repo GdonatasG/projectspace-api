@@ -49,4 +49,11 @@ public class InvitationController {
         return new ResponseEntity<>(new SuccessBody<>(), HttpStatus.OK);
     }
 
+    @PostMapping("/accept")
+    public ResponseEntity<SuccessBody> accept(@RequestParam("id") int id) {
+        invitationService.accept(Integer.toUnsignedLong(id));
+
+        return new ResponseEntity<>(new SuccessBody<>(), HttpStatus.OK);
+    }
+
 }

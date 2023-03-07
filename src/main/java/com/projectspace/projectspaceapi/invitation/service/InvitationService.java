@@ -11,10 +11,13 @@ import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.project.repository.ProjectRepository;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
 import com.projectspace.projectspaceapi.projectmember.repository.ProjectMemberRepository;
+import com.projectspace.projectspaceapi.projectmemberlevel.model.ProjectMemberLevel;
+import com.projectspace.projectspaceapi.projectmemberlevel.repository.ProjectMemberLevelRepository;
 import com.projectspace.projectspaceapi.user.model.User;
 import com.projectspace.projectspaceapi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +31,8 @@ public class InvitationService {
     private final ProjectRepository projectRepository;
 
     private final ProjectMemberRepository projectMemberRepository;
+
+    private final ProjectMemberLevelRepository projectMemberLevelRepository;
 
     private final UserRepository userRepository;
 
@@ -130,6 +135,38 @@ public class InvitationService {
             throw new ForbiddenException();
         }
 
+        invitationRepository.delete(invitation.get());
+    }
+
+    @Transactional
+    public void accept(Long invitationId) {
+        Optional<Invitation> invitation = invitationRepository.findById(invitationId);
+
+        if (invitation.isEmpty()) {
+            throw new NotFoundException("Invitation not found!");
+        }
+
+        User currentUser = authenticationUserHelper.getCurrentUser();
+
+        if (!currentUser.getId().equals(invitation.get().getUser().getId())) {
+            throw new ForbiddenException();
+        }
+
+        Optional<ProjectMember> currentUserAsProjectMember = projectMemberRepository.findByProjectIdAndUserId(invitation.get().getProject().getId(), currentUser.getId());
+
+        if (currentUserAsProjectMember.isPresent()) {
+            throw new AlreadyTakenException("User is already member!");
+        }
+
+        Optional<ProjectMemberLevel> projectMemberLevel = projectMemberLevelRepository.findByName("MEMBER");
+
+        ProjectMember projectMember = new ProjectMember();
+
+        projectMember.setUser(currentUser);
+        projectMember.setProject(invitation.get().getProject());
+        projectMember.setLevel(projectMemberLevel.get());
+
+        projectMemberRepository.save(projectMember);
         invitationRepository.delete(invitation.get());
     }
 }
