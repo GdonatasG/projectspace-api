@@ -13,8 +13,8 @@ public class AuthenticationConfigConstants {
     public static final String PROJECT_MEMBER_LEVEL_URL = PROJECT_URL + "/member-levels";
     public static final String PROJECT_INVITATIONS_URL = PROJECT_URL + "/invitations";
     public static final String TASK_STATUS_URL = URL_PREFIX + "/task/status";
-
     public static final String TASK_PRIORITY_URL = URL_PREFIX + "/task/priority";
+    public static final String TASK_URL = URL_PREFIX + "/task";
 
 
 }
