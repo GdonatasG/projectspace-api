@@ -30,4 +30,18 @@ public class TaskController {
 
         return new ResponseEntity<>(new SuccessBody<>(), HttpStatus.OK);
     }
+
+    @PutMapping("/{id}/close")
+    public ResponseEntity<SuccessBody> closeTask(@PathVariable int id) {
+        taskService.changeTaskStatus(Integer.toUnsignedLong(id), true);
+
+        return new ResponseEntity<>(new SuccessBody<>(), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/open")
+    public ResponseEntity<SuccessBody> openTask(@PathVariable int id) {
+        taskService.changeTaskStatus(Integer.toUnsignedLong(id), false);
+
+        return new ResponseEntity<>(new SuccessBody<>(), HttpStatus.OK);
+    }
 }

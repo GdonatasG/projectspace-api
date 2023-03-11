@@ -84,4 +84,33 @@ public class TaskService {
         // TODO: save assignees
         taskRepository.save(task);
     }
+
+    public void changeTaskStatus(Long taskId, Boolean shouldClose) {
+        Optional<Task> task = taskRepository.findById(taskId);
+
+        if (task.isEmpty()) {
+            throw new NotFoundException("Task not found!");
+        }
+
+        User currentUser = authenticationUserHelper.getCurrentUser();
+
+        Optional<ProjectMember> member =
+                projectMemberRepository.findByProjectIdAndUserId(task.get().getProject().getId(), currentUser.getId());
+
+        if (member.isEmpty()) {
+            throw new ForbiddenException();
+        }
+
+        TaskStatus status = new TaskStatus();
+
+        if (shouldClose) {
+            status.setId(2L);
+        } else {
+            status.setId(1L);
+        }
+
+        task.get().setStatus(status);
+
+        taskRepository.save(task.get());
+    }
 }
