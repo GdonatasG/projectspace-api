@@ -24,7 +24,7 @@ public class Task {
     @Column(nullable = false)
     private String title;
 
-    @Column(length = 1000)
+    @Column(length = 3000)
     private String description;
 
     @ManyToOne
