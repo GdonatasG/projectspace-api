@@ -3,6 +3,7 @@ package com.projectspace.projectspaceapi.task.controller;
 import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConstants;
 import com.projectspace.projectspaceapi.common.response.SuccessBody;
 import com.projectspace.projectspaceapi.task.request.CreateTaskRequest;
+import com.projectspace.projectspaceapi.task.request.UpdateTaskRequest;
 import com.projectspace.projectspaceapi.task.service.TaskService;
 import com.projectspace.projectspaceapi.task.model.Task;
 import jakarta.validation.Valid;
@@ -41,6 +42,13 @@ public class TaskController {
     @PutMapping("/{id}/open")
     public ResponseEntity<SuccessBody> openTask(@PathVariable int id) {
         taskService.changeTaskStatus(Integer.toUnsignedLong(id), false);
+
+        return new ResponseEntity<>(new SuccessBody<>(), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<SuccessBody> updateTask(@PathVariable int id, @RequestBody @Valid UpdateTaskRequest updateTaskRequest) {
+        taskService.updateTask(Integer.toUnsignedLong(id), updateTaskRequest);
 
         return new ResponseEntity<>(new SuccessBody<>(), HttpStatus.OK);
     }

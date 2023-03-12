@@ -10,6 +10,7 @@ import com.projectspace.projectspaceapi.projectmember.repository.ProjectMemberRe
 import com.projectspace.projectspaceapi.task.model.Task;
 import com.projectspace.projectspaceapi.task.repository.TaskRepository;
 import com.projectspace.projectspaceapi.task.request.CreateTaskRequest;
+import com.projectspace.projectspaceapi.task.request.UpdateTaskRequest;
 import com.projectspace.projectspaceapi.taskpriority.model.TaskPriority;
 import com.projectspace.projectspaceapi.taskstatus.model.TaskStatus;
 import com.projectspace.projectspaceapi.user.model.User;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -110,6 +112,52 @@ public class TaskService {
         }
 
         task.get().setStatus(status);
+
+        taskRepository.save(task.get());
+    }
+
+    public void updateTask(Long taskId, UpdateTaskRequest updateTaskRequest) {
+        Optional<Task> task = taskRepository.findById(taskId);
+
+        if (task.isEmpty()) {
+            throw new NotFoundException("Task not found!");
+        }
+
+        User currentUser = authenticationUserHelper.getCurrentUser();
+
+        Optional<ProjectMember> member =
+                projectMemberRepository.findByProjectIdAndUserId(task.get().getProject().getId(), currentUser.getId());
+
+        if (member.isEmpty()) {
+            throw new ForbiddenException();
+        }
+
+        if (updateTaskRequest.getTitle() != null) {
+            task.get().setTitle(updateTaskRequest.getTitle());
+        }
+
+        if (updateTaskRequest.getDescription() != null) {
+            task.get().setDescription(updateTaskRequest.getDescription());
+        }
+
+        if (updateTaskRequest.getPriority_id() != null) {
+            TaskPriority priority = new TaskPriority();
+            priority.setId(updateTaskRequest.getPriority_id());
+            task.get().setPriority(priority);
+        }
+
+        if (updateTaskRequest.getStart_date() != null) {
+            task.get().setStartDate(updateTaskRequest.getStart_date());
+        }
+
+        if (updateTaskRequest.getEnd_date() != null) {
+            task.get().setEndDate(updateTaskRequest.getEnd_date());
+        }
+
+        if (updateTaskRequest.getAssignees() != null) {
+            System.out.println(updateTaskRequest.getAssignees().size());
+            // TODO: save new assignees
+        }
 
         taskRepository.save(task.get());
     }
