@@ -3,6 +3,7 @@ package com.projectspace.projectspaceapi.project.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.projectspace.projectspaceapi.invitation.model.Invitation;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
+import com.projectspace.projectspaceapi.task.model.Task;
 import com.projectspace.projectspaceapi.user.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -39,4 +40,8 @@ public class Project {
     @JsonIgnore
     @OneToMany(mappedBy = "project")
     private List<Invitation> invitations;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "project")
+    private List<Task> tasks;
 }
