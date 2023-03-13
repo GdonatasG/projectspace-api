@@ -1,4 +1,4 @@
-package com.projectspace.projectspaceapi.taskassignee;
+package com.projectspace.projectspaceapi.taskassignee.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;

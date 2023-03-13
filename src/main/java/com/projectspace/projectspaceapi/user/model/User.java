@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.projectspace.projectspaceapi.invitation.model.Invitation;
 import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
-import com.projectspace.projectspaceapi.taskassignee.TaskAssignee;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

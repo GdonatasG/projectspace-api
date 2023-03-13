@@ -1,10 +1,10 @@
 package com.projectspace.projectspaceapi.task.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.projectspace.projectspaceapi.project.model.Project;
-import com.projectspace.projectspaceapi.taskassignee.TaskAssignee;
+import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
+import com.projectspace.projectspaceapi.taskassignee.model.TaskAssignee;
 import com.projectspace.projectspaceapi.taskpriority.model.TaskPriority;
 import com.projectspace.projectspaceapi.taskstatus.model.TaskStatus;
 import jakarta.persistence.*;
@@ -30,6 +30,10 @@ public class Task {
 
     @Column(length = 3000)
     private String description;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "creator_member_id")
+    private ProjectMember creator;
 
     @ManyToOne
     @JoinColumn(name = "status_id")

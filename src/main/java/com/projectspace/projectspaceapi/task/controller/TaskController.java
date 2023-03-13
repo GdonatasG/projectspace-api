@@ -46,7 +46,7 @@ public class TaskController {
         return new ResponseEntity<>(new SuccessBody<>(), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<SuccessBody> updateTask(@PathVariable int id, @RequestBody @Valid UpdateTaskRequest updateTaskRequest) {
         taskService.updateTask(Integer.toUnsignedLong(id), updateTaskRequest);
 
