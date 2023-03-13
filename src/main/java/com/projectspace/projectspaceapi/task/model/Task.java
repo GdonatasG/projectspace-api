@@ -1,6 +1,7 @@
 package com.projectspace.projectspaceapi.task.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.taskassignee.TaskAssignee;
@@ -50,7 +51,8 @@ public class Task {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @JsonIgnore
+
+    @JsonIgnoreProperties(value = {"task"})
     @OneToMany(mappedBy = "task")
     private List<TaskAssignee> assignees;
 
