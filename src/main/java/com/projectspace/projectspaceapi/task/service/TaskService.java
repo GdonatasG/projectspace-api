@@ -11,6 +11,8 @@ import com.projectspace.projectspaceapi.task.model.Task;
 import com.projectspace.projectspaceapi.task.repository.TaskRepository;
 import com.projectspace.projectspaceapi.task.request.CreateTaskRequest;
 import com.projectspace.projectspaceapi.task.request.UpdateTaskRequest;
+import com.projectspace.projectspaceapi.taskassignee.TaskAssignee;
+import com.projectspace.projectspaceapi.taskassignee.TaskAssigneeRepository;
 import com.projectspace.projectspaceapi.taskpriority.model.TaskPriority;
 import com.projectspace.projectspaceapi.taskstatus.model.TaskStatus;
 import com.projectspace.projectspaceapi.user.model.User;
@@ -26,6 +28,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+
+    private final TaskAssigneeRepository taskAssigneeRepository;
 
     private final ProjectMemberRepository projectMemberRepository;
 
@@ -83,8 +87,28 @@ public class TaskService {
         }
         task.setProject(project);
 
-        // TODO: save assignees
         taskRepository.save(task);
+
+        if (createTaskRequest.getAssignees() != null) {
+            for (Long memberId : createTaskRequest.getAssignees()) {
+                Optional<ProjectMember> projectMember = projectMemberRepository.findById(memberId);
+
+                if (projectMember.isEmpty()) {
+                    throw new NotFoundException("Project member with id " + memberId + " not found!");
+                }
+
+                if (!projectMember.get().getProject().getId().equals(task.getProject().getId())) {
+                    throw new ForbiddenException();
+                }
+
+                TaskAssignee assignee = new TaskAssignee();
+                assignee.setProjectMember(projectMember.get());
+                assignee.setTask(task);
+
+                taskAssigneeRepository.save(assignee);
+
+            }
+        }
     }
 
     public void changeTaskStatus(Long taskId, Boolean shouldClose) {
