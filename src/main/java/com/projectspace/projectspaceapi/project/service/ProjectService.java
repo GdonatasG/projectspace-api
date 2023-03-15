@@ -4,6 +4,7 @@ import com.projectspace.projectspaceapi.common.exception.AlreadyTakenException;
 import com.projectspace.projectspaceapi.common.exception.ForbiddenException;
 import com.projectspace.projectspaceapi.common.exception.NotFoundException;
 import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
+import com.projectspace.projectspaceapi.invitation.repository.InvitationRepository;
 import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.project.repository.ProjectRepository;
 import com.projectspace.projectspaceapi.project.request.CreateProjectRequest;
@@ -12,6 +13,8 @@ import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
 import com.projectspace.projectspaceapi.projectmemberlevel.model.ProjectMemberLevel;
 import com.projectspace.projectspaceapi.projectmember.repository.ProjectMemberRepository;
+import com.projectspace.projectspaceapi.task.repository.TaskRepository;
+import com.projectspace.projectspaceapi.taskassignee.repository.TaskAssigneeRepository;
 import com.projectspace.projectspaceapi.user.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,12 @@ public class ProjectService {
     private final ProjectMemberRepository projectMemberRepository;
 
     private final AuthenticationUserHelper authenticationUserHelper;
+
+    private final TaskRepository taskRepository;
+
+    private final TaskAssigneeRepository taskAssigneeRepository;
+
+    private final InvitationRepository invitationRepository;
 
     public Project getByIdIfCurrentUserIsProjectMember(Long id) {
         User currentUser = authenticationUserHelper.getCurrentUser();
@@ -112,7 +121,7 @@ public class ProjectService {
 
     @Transactional
     public void deleteProject(DeleteProjectRequest deleteProjectRequest) {
-        Optional<Project> byId = projectRepository.findById(deleteProjectRequest.getProjectId());
+        Optional<Project> byId = projectRepository.findById(deleteProjectRequest.getProject_id());
 
         if (byId.isEmpty()) {
             throw new NotFoundException("Project not found!");
@@ -125,7 +134,9 @@ public class ProjectService {
             throw new ForbiddenException();
         }
 
-        // TODO: delete all invitations associated with the project
+        taskAssigneeRepository.deleteAllByTask_Project_Id(project.getId());
+        taskRepository.deleteAllByProject_Id(project.getId());
+        invitationRepository.deleteAllByProject_Id(project.getId());
         projectMemberRepository.deleteAllByProjectId(project.getId());
         projectRepository.delete(project);
     }
