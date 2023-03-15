@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,6 +50,19 @@ public class TaskService {
         }
 
         return task.get();
+    }
+
+    public List<Task> getUserAssignedTasks(Long projectId) {
+        User currentUser = authenticationUserHelper.getCurrentUser();
+
+        Optional<ProjectMember> member =
+                projectMemberRepository.findByProjectIdAndUserId(projectId, currentUser.getId());
+
+        if (member.isEmpty()) {
+            throw new ForbiddenException();
+        }
+
+        return taskRepository.findAllByProject_IdAndAssignees_ProjectMember_Id(projectId, member.get().getId());
     }
 
     @Transactional

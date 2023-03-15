@@ -1,6 +1,8 @@
 package com.projectspace.projectspaceapi.task.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonMerge;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.projectspace.projectspaceapi.project.model.Project;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
@@ -33,6 +35,7 @@ public class Task {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "creator_member_id")
+    @JsonIgnoreProperties(value = {"project"})
     private ProjectMember creator;
 
     @ManyToOne
