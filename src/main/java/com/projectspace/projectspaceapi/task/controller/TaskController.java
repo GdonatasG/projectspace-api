@@ -29,8 +29,15 @@ public class TaskController {
     }
 
     @GetMapping("/assigned")
-    public ResponseEntity<SuccessBodyList<Task>> getUserAssignedTasks(@RequestParam(name = "project_id") int projectId) {
-        List<Task> tasks = taskService.getUserAssignedTasks(Integer.toUnsignedLong(projectId));
+    public ResponseEntity<SuccessBodyList<Task>> getUserAssignedTasksByProjectId(@RequestParam(name = "project_id") int projectId) {
+        List<Task> tasks = taskService.getUserAssignedTasksByProjectId(Integer.toUnsignedLong(projectId));
+
+        return new ResponseEntity<>(new SuccessBodyList<>(tasks), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<SuccessBodyList<Task>> getProjectTasks(@RequestParam(name = "project_id") int projectId) {
+        List<Task> tasks = taskService.getProjectTasks(Integer.toUnsignedLong(projectId));
 
         return new ResponseEntity<>(new SuccessBodyList<>(tasks), HttpStatus.OK);
     }

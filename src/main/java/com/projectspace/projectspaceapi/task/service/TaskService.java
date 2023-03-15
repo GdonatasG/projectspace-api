@@ -52,7 +52,7 @@ public class TaskService {
         return task.get();
     }
 
-    public List<Task> getUserAssignedTasks(Long projectId) {
+    public List<Task> getUserAssignedTasksByProjectId(Long projectId) {
         User currentUser = authenticationUserHelper.getCurrentUser();
 
         Optional<ProjectMember> member =
@@ -63,6 +63,19 @@ public class TaskService {
         }
 
         return taskRepository.findAllByProject_IdAndAssignees_ProjectMember_Id(projectId, member.get().getId());
+    }
+
+    public List<Task> getProjectTasks(Long projectId) {
+        User currentUser = authenticationUserHelper.getCurrentUser();
+
+        Optional<ProjectMember> member =
+                projectMemberRepository.findByProjectIdAndUserId(projectId, currentUser.getId());
+
+        if (member.isEmpty()) {
+            throw new ForbiddenException();
+        }
+
+        return taskRepository.findAllByProject_Id(projectId);
     }
 
     @Transactional
