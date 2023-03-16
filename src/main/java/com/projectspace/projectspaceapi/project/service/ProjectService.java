@@ -6,6 +6,7 @@ import com.projectspace.projectspaceapi.common.exception.NotFoundException;
 import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
 import com.projectspace.projectspaceapi.invitation.repository.InvitationRepository;
 import com.projectspace.projectspaceapi.project.model.Project;
+import com.projectspace.projectspaceapi.project.model.ProjectStatistics;
 import com.projectspace.projectspaceapi.project.repository.ProjectRepository;
 import com.projectspace.projectspaceapi.project.request.CreateProjectRequest;
 import com.projectspace.projectspaceapi.project.request.DeleteProjectRequest;
@@ -13,14 +14,20 @@ import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
 import com.projectspace.projectspaceapi.projectmemberlevel.model.ProjectMemberLevel;
 import com.projectspace.projectspaceapi.projectmember.repository.ProjectMemberRepository;
+import com.projectspace.projectspaceapi.task.model.Task;
 import com.projectspace.projectspaceapi.task.repository.TaskRepository;
 import com.projectspace.projectspaceapi.taskassignee.repository.TaskAssigneeRepository;
 import com.projectspace.projectspaceapi.user.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -139,5 +146,46 @@ public class ProjectService {
         invitationRepository.deleteAllByProject_Id(project.getId());
         projectMemberRepository.deleteAllByProjectId(project.getId());
         projectRepository.delete(project);
+    }
+
+    @SneakyThrows
+    public ProjectStatistics getProjectStatistics(Long projectId) {
+        Optional<Project> byId = projectRepository.findById(projectId);
+
+        if (byId.isEmpty()) {
+            throw new NotFoundException("Project not found!");
+        }
+
+        User currentUser = authenticationUserHelper.getCurrentUser();
+        Optional<ProjectMember> member = projectMemberRepository.findByProjectIdAndUserId(projectId, currentUser.getId());
+
+        if (member.isEmpty()) {
+            throw new ForbiddenException();
+        }
+
+
+        ProjectStatistics statistics = new ProjectStatistics();
+
+        Long openTasks = taskRepository.countByProject_IdAndStatus_Name(projectId, "OPEN");
+        Long closedTasks = taskRepository.countByProject_IdAndStatus_Name(projectId, "CLOSED");
+        Long totalTasks = taskRepository.countByProject_Id(projectId);
+
+        statistics.setOpenTasks(openTasks);
+        statistics.setClosedTasks(closedTasks);
+        statistics.setTotalTasks(totalTasks);
+
+        /*LocalDate nextMonthDate = LocalDate.now().plusMonths(1);
+
+        GregorianCalendar calendar = new GregorianCalendar();
+
+        LocalDate dateTimeBoundary = nextMonthDate
+                .withDayOfMonth(nextMonthDate.getMonth().length(calendar.isLeapYear(nextMonthDate.getYear())));
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        System.out.println(new SimpleDateFormat("yyyy-MM-dd").parse(now.toString()));*/
+
+
+        return statistics;
     }
 }

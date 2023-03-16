@@ -4,6 +4,7 @@ import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConst
 import com.projectspace.projectspaceapi.common.response.SuccessBody;
 import com.projectspace.projectspaceapi.common.response.SuccessBodyList;
 import com.projectspace.projectspaceapi.project.model.Project;
+import com.projectspace.projectspaceapi.project.model.ProjectStatistics;
 import com.projectspace.projectspaceapi.project.request.CreateProjectRequest;
 import com.projectspace.projectspaceapi.project.request.DeleteProjectRequest;
 import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
@@ -27,6 +28,15 @@ public class ProjectController {
         Project project = projectService.getByIdIfCurrentUserIsProjectMember(Integer.toUnsignedLong(id));
 
         SuccessBody<Project> response = new SuccessBody<>(project);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/statistics")
+    public ResponseEntity<SuccessBody<ProjectStatistics>> getProjectStatistics(@PathVariable int id) {
+        ProjectStatistics statistics = projectService.getProjectStatistics(Integer.toUnsignedLong(id));
+
+        SuccessBody<ProjectStatistics> response = new SuccessBody<>(statistics);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
