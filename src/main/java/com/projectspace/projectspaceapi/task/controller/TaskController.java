@@ -2,6 +2,7 @@ package com.projectspace.projectspaceapi.task.controller;
 
 import com.projectspace.projectspaceapi.authentication.AuthenticationConfigConstants;
 import com.projectspace.projectspaceapi.common.response.SuccessBody;
+import com.projectspace.projectspaceapi.common.response.SuccessBodyList;
 import com.projectspace.projectspaceapi.task.request.CreateTaskRequest;
 import com.projectspace.projectspaceapi.task.request.UpdateTaskRequest;
 import com.projectspace.projectspaceapi.task.service.TaskService;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = AuthenticationConfigConstants.TASK_URL)
@@ -23,6 +26,20 @@ public class TaskController {
         Task task = taskService.getTask(Integer.toUnsignedLong(id));
 
         return new ResponseEntity<>(new SuccessBody<>(task), HttpStatus.OK);
+    }
+
+    @GetMapping("/assigned")
+    public ResponseEntity<SuccessBodyList<Task>> getUserAssignedTasksByProjectId(@RequestParam(name = "project_id") int projectId) {
+        List<Task> tasks = taskService.getUserAssignedTasksByProjectId(Integer.toUnsignedLong(projectId));
+
+        return new ResponseEntity<>(new SuccessBodyList<>(tasks), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<SuccessBodyList<Task>> getProjectTasks(@RequestParam(name = "project_id") int projectId) {
+        List<Task> tasks = taskService.getProjectTasks(Integer.toUnsignedLong(projectId));
+
+        return new ResponseEntity<>(new SuccessBodyList<>(tasks), HttpStatus.OK);
     }
 
     @PostMapping
@@ -46,7 +63,7 @@ public class TaskController {
         return new ResponseEntity<>(new SuccessBody<>(), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<SuccessBody> updateTask(@PathVariable int id, @RequestBody @Valid UpdateTaskRequest updateTaskRequest) {
         taskService.updateTask(Integer.toUnsignedLong(id), updateTaskRequest);
 
