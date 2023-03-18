@@ -11,6 +11,6 @@ public class InvitationRequest {
     @Email(message = "The email address is invalid.")
     private String email;
 
-    @NotNull(message = "projectId is required.")
-    private Long projectId;
+    @NotNull(message = "project_id is required.")
+    private Long project_id;
 }

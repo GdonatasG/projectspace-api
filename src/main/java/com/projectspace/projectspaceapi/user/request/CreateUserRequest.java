@@ -15,12 +15,12 @@ public class CreateUserRequest {
     @NotNull(message = "First name is required.")
     @Size(min = 1, max = 100, message = "The first name should not be empty and should not exceed 100 characters.")
     @JsonProperty("first_name")
-    private String firstName;
+    private String first_name;
 
     @NotNull(message = "Last name is required.")
     @Size(min = 1, max = 100, message = "The last name should not be empty and should not exceed 100 characters.")
     @JsonProperty("last_name")
-    private String lastName;
+    private String last_name;
 
     @NotBlank(message = "Email is required.")
     @Email(message = "The email address is invalid.")
@@ -29,7 +29,7 @@ public class CreateUserRequest {
     @Nullable
     @Size(min = 1, max = 100, message = "The organization name should not be empty and should not exceed 100 characters.")
     @JsonProperty("organization_name")
-    private String organizationName;
+    private String organization_name;
 
     @NotNull(message = "Password is required.")
     @Size(min = 5, max = 100, message = "The length of password must be between 5 and 100 characters.")

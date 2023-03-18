@@ -39,7 +39,7 @@ public class InvitationService {
     private final AuthenticationUserHelper authenticationUserHelper;
 
     public void invite(InvitationRequest invitationRequest) {
-        Optional<Project> project = projectRepository.findById(invitationRequest.getProjectId());
+        Optional<Project> project = projectRepository.findById(invitationRequest.getProject_id());
 
         if (project.isEmpty()) {
             throw new NotFoundException("Project not found!");
@@ -65,7 +65,7 @@ public class InvitationService {
             throw new NotFoundException("User with this email not found!");
         }
 
-        Optional<ProjectMember> possibleMember = projectMemberRepository.findByProjectIdAndUserId(invitationRequest.getProjectId(), invitedUser.get().getId());
+        Optional<ProjectMember> possibleMember = projectMemberRepository.findByProjectIdAndUserId(invitationRequest.getProject_id(), invitedUser.get().getId());
 
 
         if (possibleMember.isPresent()) {

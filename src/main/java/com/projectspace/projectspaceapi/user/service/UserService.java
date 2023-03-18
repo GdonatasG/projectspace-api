@@ -5,7 +5,6 @@ import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
 import com.projectspace.projectspaceapi.user.model.User;
 import com.projectspace.projectspaceapi.user.repository.UserRepository;
 import com.projectspace.projectspaceapi.user.request.CreateUserRequest;
-import com.projectspace.projectspaceapi.user.request.UpdateOrganizationRequest;
 import com.projectspace.projectspaceapi.user.request.UpdateUserRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -44,33 +43,29 @@ public class UserService {
         User user = new User();
 
         user.setUsername(createUserRequest.getUsername());
-        user.setFirstName(createUserRequest.getFirstName());
-        user.setLastName(createUserRequest.getLastName());
-        user.setOrganizationName(createUserRequest.getOrganizationName());
+        user.setFirstName(createUserRequest.getFirst_name());
+        user.setLastName(createUserRequest.getLast_name());
+        user.setOrganizationName(createUserRequest.getOrganization_name());
         user.setEmail(createUserRequest.getEmail());
         user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
-        user.setRole(createUserRequest.getRole());
+        user.setRole("USER");
         userRepository.save(user);
     }
 
     public void updateUser(UpdateUserRequest updateUserRequest) {
         User user = authenticationUserHelper.getCurrentUser();
 
-        if (updateUserRequest.getFirstName() != null) {
-            user.setFirstName(updateUserRequest.getFirstName());
+        if (updateUserRequest.getFirst_name() != null) {
+            user.setFirstName(updateUserRequest.getFirst_name());
         }
 
-        if (updateUserRequest.getLastName() != null) {
-            user.setLastName(updateUserRequest.getLastName());
+        if (updateUserRequest.getLast_name() != null) {
+            user.setLastName(updateUserRequest.getLast_name());
         }
 
-        userRepository.save(user);
-    }
-
-    public void updateOrganization(UpdateOrganizationRequest updateOrganizationRequest) {
-        User user = authenticationUserHelper.getCurrentUser();
-
-        user.setOrganizationName(updateOrganizationRequest.getOrganizationName());
+        if (updateUserRequest.getOrganization_name() != null){
+            user.setOrganizationName(updateUserRequest.getOrganization_name());
+        }
 
         userRepository.save(user);
     }
