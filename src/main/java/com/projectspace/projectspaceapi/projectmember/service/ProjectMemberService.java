@@ -29,8 +29,8 @@ public class ProjectMemberService {
 
     @Transactional
     public void delete(DeleteMemberRequest deleteMemberRequest) {
-        Optional<Project> project = projectRepository.findById(deleteMemberRequest.getProjectId());
-        Optional<ProjectMember> projectMember = projectMemberRepository.findById(deleteMemberRequest.getMemberId());
+        Optional<Project> project = projectRepository.findById(deleteMemberRequest.getProject_id());
+        Optional<ProjectMember> projectMember = projectMemberRepository.findById(deleteMemberRequest.getMember_id());
 
         if (project.isEmpty()) {
             throw new ForbiddenException();
@@ -54,7 +54,7 @@ public class ProjectMemberService {
     }
 
     public void update(UpdateProjectMemberRequest updateProjectMemberRequest) {
-        Optional<ProjectMember> member = projectMemberRepository.findById(updateProjectMemberRequest.getMemberId());
+        Optional<ProjectMember> member = projectMemberRepository.findById(updateProjectMemberRequest.getMember_id());
 
         if (member.isEmpty()) {
             throw new NotFoundException("Project member not found!");
@@ -76,16 +76,16 @@ public class ProjectMemberService {
             throw new ForbiddenException();
         }
 
-        if (updateProjectMemberRequest.getMemberLevelId() == null) {
+        if (updateProjectMemberRequest.getMember_level_id() == null) {
             return;
         }
 
-        if (updateProjectMemberRequest.getMemberLevelId() == 1) {
+        if (updateProjectMemberRequest.getMember_level_id() == 1) {
             throw new ForbiddenException();
         }
 
         ProjectMemberLevel newLevel = new ProjectMemberLevel();
-        newLevel.setId(updateProjectMemberRequest.getMemberLevelId());
+        newLevel.setId(updateProjectMemberRequest.getMember_level_id());
         member.get().setLevel(newLevel);
 
         projectMemberRepository.save(member.get());

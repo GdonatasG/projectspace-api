@@ -16,22 +16,16 @@ import com.projectspace.projectspaceapi.project.request.UpdateProjectRequest;
 import com.projectspace.projectspaceapi.projectmember.model.ProjectMember;
 import com.projectspace.projectspaceapi.projectmemberlevel.model.ProjectMemberLevel;
 import com.projectspace.projectspaceapi.projectmember.repository.ProjectMemberRepository;
-import com.projectspace.projectspaceapi.task.model.Task;
 import com.projectspace.projectspaceapi.task.repository.TaskRepository;
 import com.projectspace.projectspaceapi.taskassignee.repository.TaskAssigneeRepository;
 import com.projectspace.projectspaceapi.user.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
@@ -98,7 +92,7 @@ public class ProjectService {
     }
 
     public void updateProject(UpdateProjectRequest updateProjectRequest) {
-        Optional<Project> byId = projectRepository.findById(updateProjectRequest.getProjectId());
+        Optional<Project> byId = projectRepository.findById(updateProjectRequest.getProject_id());
 
         if (byId.isEmpty()) {
             throw new NotFoundException("Project not found!");

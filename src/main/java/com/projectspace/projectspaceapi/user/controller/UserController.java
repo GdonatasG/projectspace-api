@@ -5,7 +5,6 @@ import com.projectspace.projectspaceapi.common.helpers.AuthenticationUserHelper;
 import com.projectspace.projectspaceapi.common.response.SuccessBody;
 import com.projectspace.projectspaceapi.user.model.User;
 import com.projectspace.projectspaceapi.user.request.CreateUserRequest;
-import com.projectspace.projectspaceapi.user.request.UpdateOrganizationRequest;
 import com.projectspace.projectspaceapi.user.request.UpdateUserRequest;
 import com.projectspace.projectspaceapi.user.service.UserService;
 import jakarta.validation.Valid;
@@ -31,12 +30,6 @@ public class UserController {
     @PutMapping
     public ResponseEntity<SuccessBody> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
         userService.updateUser(updateUserRequest);
-        return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
-    }
-
-    @PutMapping("/organization")
-    public ResponseEntity<SuccessBody> updateOrganization(@RequestBody @Valid UpdateOrganizationRequest updateOrganizationRequest) {
-        userService.updateOrganization(updateOrganizationRequest);
         return new ResponseEntity<>(new SuccessBody(), HttpStatus.OK);
     }
 

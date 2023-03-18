@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 public class DeleteMemberRequest {
 
-    @NotNull(message = "projectId is required.")
-    private Long projectId;
-    @NotNull(message = "memberId is required.")
-    private Long memberId;
+    @NotNull(message = "project_id is required.")
+    private Long project_id;
+    @NotNull(message = "member_id is required.")
+    private Long member_id;
 }

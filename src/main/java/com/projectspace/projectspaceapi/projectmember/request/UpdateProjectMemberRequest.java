@@ -6,9 +6,9 @@ import lombok.Data;
 
 @Data
 public class UpdateProjectMemberRequest {
-    @NotNull(message = "memberId is required.")
-    private Long memberId;
+    @NotNull(message = "member_id is required.")
+    private Long member_id;
 
     @Nullable
-    private Long memberLevelId;
+    private Long member_level_id;
 }
