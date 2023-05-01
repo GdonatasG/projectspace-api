@@ -18,7 +18,7 @@ public class UpdateUserRequest {
     private String last_name;
 
     @Nullable
-    @Size(max = 100, message = "The organization name should not be empty and should not exceed 100 characters.")
+    @Size(max = 100, message = "The organization name should not exceed 100 characters.")
     @JsonProperty("organization_name")
     private String organization_name;
 }

@@ -10,6 +10,9 @@ import com.projectspace.projectspaceapi.projectmemberlevel.model.ProjectMemberLe
 import com.projectspace.projectspaceapi.projectmember.repository.ProjectMemberRepository;
 import com.projectspace.projectspaceapi.projectmember.request.DeleteMemberRequest;
 import com.projectspace.projectspaceapi.projectmember.request.UpdateProjectMemberRequest;
+import com.projectspace.projectspaceapi.task.model.Task;
+import com.projectspace.projectspaceapi.task.repository.TaskRepository;
+import com.projectspace.projectspaceapi.taskassignee.repository.TaskAssigneeRepository;
 import com.projectspace.projectspaceapi.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,10 @@ public class ProjectMemberService {
     private final ProjectMemberRepository projectMemberRepository;
 
     private final ProjectRepository projectRepository;
+
+    private final TaskAssigneeRepository taskAssigneeRepository;
+
+    private final TaskRepository taskRepository;
     private final AuthenticationUserHelper authenticationUserHelper;
 
 
@@ -46,10 +53,23 @@ public class ProjectMemberService {
             throw new ForbiddenException();
         }
 
+        Optional<ProjectMember> projectOwner = projectMemberRepository.findByProjectIdAndUserId(project.get().getId(), project.get().getOwner().getId());
+
+        if (projectOwner.isEmpty()) {
+            throw new ForbiddenException();
+        }
+
         if (projectMember.get().getUser().getId().equals(currentUser.getId())) {
             throw new ForbiddenException();
         }
 
+        List<Task> memberTasks = taskRepository.findAllByProject_IdAndCreator_Id(project.get().getId(), projectMember.get().getId());
+        for (Task task : memberTasks) {
+            task.setCreator(projectOwner.get());
+            taskRepository.save(task);
+        }
+
+        taskAssigneeRepository.deleteAllByProjectMember_Id(projectMember.get().getId());
         projectMemberRepository.delete(projectMember.get());
     }
 
