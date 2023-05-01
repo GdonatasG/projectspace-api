@@ -58,8 +58,18 @@ public class ProjectService {
         return projectRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    public List<Project> getUserAvailableProjects() {
-        return projectRepository.findAllByProjectMembers_UserId(authenticationUserHelper.getCurrentUser().getId());
+    public List<Project> getUserAvailableProjects(Boolean owned) {
+        Long userId = authenticationUserHelper.getCurrentUser().getId();
+
+        if (owned == null) {
+            return projectRepository.findAllByProjectMembers_UserId(userId);
+        }
+
+        if (owned) {
+            return projectRepository.findAllByOwnerId(userId);
+        }
+
+        return projectRepository.findAllByProjectMembers_UserIdAndOwnerIdNot(userId, userId);
     }
 
     @Transactional
@@ -231,7 +241,7 @@ public class ProjectService {
         return getRiskLevelByTasksAndMonthlyImpacts(riskValue).getVisualName();
     }
 
-    private ProjectRiskLevel getRiskLevelByMonthlyImpactOnly(float monthlyRiskImpact){
+    private ProjectRiskLevel getRiskLevelByMonthlyImpactOnly(float monthlyRiskImpact) {
         if (monthlyRiskImpact < 0.5) {
             return ProjectRiskLevel.LOW;
         }

@@ -52,8 +52,8 @@ public class ProjectController {
     }
 
     @GetMapping("/available")
-    public ResponseEntity<SuccessBodyList<Project>> getUserAvailableProjects() {
-        List<Project> projects = projectService.getUserAvailableProjects();
+    public ResponseEntity<SuccessBodyList<Project>> getUserAvailableProjects(@RequestParam(required = false) Boolean owned) {
+        List<Project> projects = projectService.getUserAvailableProjects(owned);
 
         SuccessBodyList<Project> response = new SuccessBodyList<>(projects);
 

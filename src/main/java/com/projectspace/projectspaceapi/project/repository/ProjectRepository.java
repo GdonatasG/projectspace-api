@@ -14,4 +14,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     List<Project> findAllByOwnerIdNot(Long id);
 
     List<Project> findAllByProjectMembers_UserId(Long userId);
+
+    List<Project> findAllByProjectMembers_UserIdAndOwnerIdNot(Long userId, Long ownerId);
 }
